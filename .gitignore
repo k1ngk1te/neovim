@@ -1,0 +1,34 @@
+# Compiled Lua files (generally don't commit these)
+**/*.lua.orig
+**/*.luac
+
+# Swap files
+*.swp
+*.swo
+
+# Backup files
+*.bak
+*~
+
+# Packer/Lazy.nvim related files (if you use them)
+# Lazy.nvim stores plugins here by default:
+lazy/
+
+# Mason.nvim data (installed LSPs, formatters, linters, etc.)
+# These are installed locally and can be huge. Don't commit them.
+nvim-data/
+
+# LSP specific logs/data (often in nvim-data anyway)
+.lsp_*/
+.cache/
+.nvim/
+.null-ls/
+.stylua/
+.luarc.json # If this is dynamically generated or user-specific
+
+# Treesitter parsers (also part of nvim-data or similar build dir)
+parser/
+
+# Any personal secrets/tokens/local-only files
+# E.g., if you have a file named `secrets.lua` that stores API keys
+# secrets.lua
