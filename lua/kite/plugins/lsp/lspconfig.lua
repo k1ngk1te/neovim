@@ -75,41 +75,27 @@ return {
 			cmp_nvim_lsp.default_capabilities()
 		)
 
-		-- Define highlight groups for diagnostic signs.
-		-- You'll need to choose colors that fit your chosen theme (e.g., tokyonight).
-		-- These are example colors; adjust fg (foreground) to your preference.
-		vim.api.nvim_set_hl(0, "DiagnosticSignError", { fg = "#E06C75" }) -- Reddish (similar to TokyoNight's error)
-		vim.api.nvim_set_hl(0, "DiagnosticSignWarn", { fg = "#E5C07B" }) -- Yellowish (similar to TokyoNight's warning)
-		vim.api.nvim_set_hl(0, "DiagnosticSignHint", { fg = "#98C379" }) -- Greenish (similar to TokyoNight's hint)
-		vim.api.nvim_set_hl(0, "DiagnosticSignInfo", { fg = "#61AFEF" }) -- Bluish (similar to TokyoNight's info)
-
-		-- Add this block inside your config = function()
-		-- (likely just after the closing } of your mason_lspconfig.setup({ ... }))
-
 		vim.diagnostic.config({
-			virtual_text = {
-				spacing = 4,
-				severity_sort = true,
-			},
 			signs = {
-				-- Define the specific icons here
 				text = {
-					Error = " ",
-					Warn = " ",
-					Hint = "󰠠 ",
-					Info = " ",
+					[vim.diagnostic.severity.ERROR] = " ",
+					[vim.diagnostic.severity.WARN] = " ",
+					[vim.diagnostic.severity.INFO] = "󰠠 ",
+					[vim.diagnostic.severity.HINT] = " ",
 				},
-				-- Ensure the signs are enabled
-				enable = true,
+				texthl = {
+					[vim.diagnostic.severity.ERROR] = "Error",
+					[vim.diagnostic.severity.WARN] = "Error",
+					[vim.diagnostic.severity.HINT] = "Hint",
+					[vim.diagnostic.severity.INFO] = "Info",
+				},
+				numhl = {
+					[vim.diagnostic.severity.ERROR] = "",
+					[vim.diagnostic.severity.WARN] = "",
+					[vim.diagnostic.severity.HINT] = "",
+					[vim.diagnostic.severity.INFO] = "",
+				},
 			},
-			update_in_insert = false,
-			float = {
-				source = "always",
-				border = "rounded",
-			},
-			-- You can also add other options like 'underline', 'severity', etc.
-			-- underline = true, -- Underline diagnostics in the code
-			-- severity_sort = true, -- Sort diagnostics by severity in float/loclist
 		})
 
 		mason_lspconfig.setup({
