@@ -68,15 +68,49 @@ return {
 		})
 
 		-- used to enable autocompletion (assign to every lsp server config)
-		local capabilities = cmp_nvim_lsp.default_capabilities()
+		-- local capabilities = cmp_nvim_lsp.default_capabilities()
+		local capabilities = vim.tbl_deep_extend(
+			"force",
+			vim.lsp.protocol.make_client_capabilities(),
+			cmp_nvim_lsp.default_capabilities()
+		)
 
-		-- Change the Diagnostic symbols in the sign column (gutter)
-		-- (not in youtube nvim video)
-		local signs = { Error = " ", Warn = " ", Hint = "󰠠 ", Info = " " }
-		for type, icon in pairs(signs) do
-			local hl = "DiagnosticSign" .. type
-			vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
-		end
+		-- Define highlight groups for diagnostic signs.
+		-- You'll need to choose colors that fit your chosen theme (e.g., tokyonight).
+		-- These are example colors; adjust fg (foreground) to your preference.
+		vim.api.nvim_set_hl(0, "DiagnosticSignError", { fg = "#E06C75" }) -- Reddish (similar to TokyoNight's error)
+		vim.api.nvim_set_hl(0, "DiagnosticSignWarn", { fg = "#E5C07B" }) -- Yellowish (similar to TokyoNight's warning)
+		vim.api.nvim_set_hl(0, "DiagnosticSignHint", { fg = "#98C379" }) -- Greenish (similar to TokyoNight's hint)
+		vim.api.nvim_set_hl(0, "DiagnosticSignInfo", { fg = "#61AFEF" }) -- Bluish (similar to TokyoNight's info)
+
+		-- Add this block inside your config = function()
+		-- (likely just after the closing } of your mason_lspconfig.setup({ ... }))
+
+		vim.diagnostic.config({
+			virtual_text = {
+				spacing = 4,
+				severity_sort = true,
+			},
+			signs = {
+				-- Define the specific icons here
+				text = {
+					Error = " ",
+					Warn = " ",
+					Hint = "󰠠 ",
+					Info = " ",
+				},
+				-- Ensure the signs are enabled
+				enable = true,
+			},
+			update_in_insert = false,
+			float = {
+				source = "always",
+				border = "rounded",
+			},
+			-- You can also add other options like 'underline', 'severity', etc.
+			-- underline = true, -- Underline diagnostics in the code
+			-- severity_sort = true, -- Sort diagnostics by severity in float/loclist
+		})
 
 		mason_lspconfig.setup({
 			-- default handler for installed servers
@@ -135,6 +169,25 @@ return {
 							},
 							completion = {
 								callSnippet = "Replace",
+							},
+							workspace = {
+								library = vim.api.nvim_get_runtime_file("", true),
+								checkThirdParty = false,
+							},
+						},
+					},
+				})
+			end,
+			["gopls"] = function()
+				lspconfig["gopls"].setup({
+					capabilities = capabilities,
+					settings = {
+						gopls = {
+							-- buildFlags = {"-tags=wireinject"}, -- If you specifically need this in your project
+							gofumpt = true, -- Enable gofumpt formatting if you have it installed (Mason can install it)
+							staticcheck = true, -- Enable static analysis (highly recommended)
+							analyses = {
+								unusedparams = true, -- Suggest unused parameters
 							},
 						},
 					},
