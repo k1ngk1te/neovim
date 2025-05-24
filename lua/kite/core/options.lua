@@ -2,6 +2,9 @@ vim.cmd("let g:netrw_liststyle = 3")
 
 local opt = vim.opt
 
+vim.opt.spell = true
+vim.opt.spelllang = { "en_us" } -- Or your preferred language(s)
+
 opt.fileformat = "unix" -- default file format
 opt.fileformats = { "unix", "dos" } -- Prefer when opening too
 
